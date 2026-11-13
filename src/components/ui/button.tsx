@@ -10,15 +10,15 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "default", size = "default", type = "button", ...props }, ref) => {
     const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
       default:
-        "bg-slate-900 text-white hover:bg-slate-800 shadow-sm focus-visible:ring-slate-900",
+        "pastel-accent-bg text-white shadow-xs focus-visible:ring-slate-700",
       secondary:
-        "bg-slate-100 text-slate-900 hover:bg-slate-200/80 focus-visible:ring-slate-400",
+        "pastel-accent-pill border hover:opacity-90 focus-visible:ring-slate-400",
       outline:
-        "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 focus-visible:ring-slate-400",
+        "border border-slate-200/90 bg-white text-slate-700 hover:bg-slate-50/80 hover:text-slate-900 focus-visible:ring-slate-400",
       ghost:
         "text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-slate-400",
       destructive:
-        "bg-red-600 text-white hover:bg-red-700 shadow-sm focus-visible:ring-red-600",
+        "bg-rose-500 text-white hover:bg-rose-600 shadow-xs focus-visible:ring-rose-500",
     };
 
     const sizeClasses: Record<NonNullable<ButtonProps["size"]>, string> = {

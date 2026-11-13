@@ -45,7 +45,6 @@ export function NotesColumn({
       ? activeContext.project.id
       : null;
 
-  // Buscar la nota correspondiente al contexto activo
   const matchingNote = React.useMemo(() => {
     return notes.find(
       (n) =>
@@ -62,7 +61,6 @@ export function NotesColumn({
     matchingNote?.updatedAt ?? null
   );
 
-  // Clave única del contexto actual para reiniciar el editor cuando cambia la selección
   const contextKey = `${activeContext.type}:${currentGrantId ?? "none"}:${
     currentProjectId ?? "none"
   }`;
@@ -128,14 +126,14 @@ export function NotesColumn({
   return (
     <aside
       aria-label="Columna Derecha de Bloc de Notas Contextual"
-      className="flex h-full w-full lg:w-[25%] flex-col bg-white overflow-hidden"
+      className="pastel-col-notes flex h-full w-full lg:w-[25%] flex-col overflow-hidden transition-colors duration-200"
     >
       {/* Cabecera Contextual del Panel de Notas */}
-      <div className="shrink-0 border-b border-slate-200 bg-white px-4 py-3 space-y-2">
+      <div className="pastel-col-header shrink-0 border-b px-4 py-3 space-y-2 transition-colors duration-200">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <NotebookPen className="h-4 w-4 text-slate-800" />
-            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800">
+            <NotebookPen className="h-4 w-4 text-slate-700" />
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-700">
               Bloc de Notas y Seguimiento
             </h2>
           </div>
@@ -144,7 +142,7 @@ export function NotesColumn({
             <button
               type="button"
               onClick={onSwitchToGeneral}
-              className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-medium text-slate-700 hover:bg-slate-100"
+              className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-medium text-slate-700 hover:bg-slate-50"
               title="Cambiar al bloc de notas general del organismo"
             >
               <Globe className="h-3 w-3" />
@@ -157,9 +155,9 @@ export function NotesColumn({
         <div
           className={`rounded-lg border p-2.5 text-xs transition-colors ${
             activeContext.type === "GENERAL"
-              ? "border-slate-200 bg-slate-50 text-slate-800"
+              ? "pastel-subtle-box text-slate-800"
               : activeContext.type === "GRANT"
-              ? "border-blue-200 bg-blue-50/70 text-blue-950"
+              ? "pastel-accent-pill"
               : "border-emerald-200 bg-emerald-50/70 text-emerald-950"
           }`}
         >
@@ -173,7 +171,7 @@ export function NotesColumn({
               )}
               {activeContext.type === "GRANT" && (
                 <>
-                  <Landmark className="h-3.5 w-3.5 text-blue-700" />
+                  <Landmark className="h-3.5 w-3.5" />
                   Nota de Subvención Seleccionada
                 </>
               )}
@@ -204,7 +202,7 @@ export function NotesColumn({
           </div>
 
           {activeContext.type === "GRANT" && activeContext.grant && (
-            <p className="mt-1 font-medium text-slate-900 line-clamp-2 text-[11px]">
+            <p className="mt-1 font-medium line-clamp-2 text-[11px]">
               {activeContext.grant.title}
             </p>
           )}
@@ -244,7 +242,7 @@ export function NotesColumn({
               ? "Anote requerimientos de justificación, subsanaciones, hitos o condiciones particulares de esta subvención..."
               : "Anote incidencias del expediente de contratación, certificaciones de obra, facturas o reparos de Intervención..."
           }
-          className="flex-1 w-full resize-none rounded-xl border border-slate-200 bg-amber-50/20 p-3.5 text-xs leading-relaxed text-slate-800 placeholder:text-slate-400 focus:border-slate-400 focus:bg-white focus:outline-none font-sans"
+          className="pastel-notepad flex-1 w-full resize-none rounded-xl border p-3.5 text-xs leading-relaxed text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none font-sans shadow-2xs transition-colors"
         />
 
         {/* Barra Inferior de Estado de Autoguardado + Botón Explícito */}
@@ -258,8 +256,8 @@ export function NotesColumn({
             )}
             {saveState === "SAVING" && (
               <>
-                <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-600" />
-                <span className="text-blue-700 font-medium">Sincronizando nota...</span>
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-sky-600" />
+                <span className="text-sky-700 font-medium">Sincronizando nota...</span>
               </>
             )}
             {saveState === "SAVED" && (
@@ -281,7 +279,7 @@ export function NotesColumn({
               </>
             )}
             {saveState === "ERROR" && (
-              <span className="text-red-600 font-medium">
+              <span className="text-rose-600 font-medium">
                 Modo local activo (sin conexión BD)
               </span>
             )}

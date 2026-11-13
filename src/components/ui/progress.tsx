@@ -17,7 +17,7 @@ export function Progress({
   return (
     <div
       className={cn(
-        "relative h-2 w-full overflow-hidden rounded-full bg-slate-100",
+        "relative h-2 w-full overflow-hidden rounded-full bg-white/90 border border-slate-200/60",
         className
       )}
       {...props}
@@ -26,10 +26,8 @@ export function Progress({
         className={cn(
           "h-full transition-all duration-300 ease-out rounded-full",
           clamped >= 100
-            ? "bg-emerald-600"
-            : clamped >= 75
-            ? "bg-blue-600"
-            : "bg-slate-800",
+            ? "bg-emerald-500"
+            : "pastel-accent-bg",
           indicatorClassName
         )}
         style={{ width: `${clamped}%` }}

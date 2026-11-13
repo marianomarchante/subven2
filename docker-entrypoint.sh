@@ -10,4 +10,4 @@ if [ "$AUTO_SEED" = "true" ]; then
 fi
 
 echo "==> [SIGESUB] Iniciando servidor Next.js 15 en puerto ${PORT:-3000}..."
-exec node server.js
+exec node .next/standalone/server.js

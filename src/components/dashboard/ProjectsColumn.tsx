@@ -61,14 +61,14 @@ export function ProjectsColumn({
   return (
     <section
       aria-label="Columna Central de Proyectos y Expedientes"
-      className="flex h-full w-full lg:w-[45%] flex-col border-r border-slate-200 bg-slate-100/40 overflow-hidden"
+      className="pastel-col-projects flex h-full w-full lg:w-[45%] flex-col border-r overflow-hidden transition-colors duration-200"
     >
       {/* Cabecera de Columna */}
-      <div className="shrink-0 border-b border-slate-200 bg-white px-4 py-3 space-y-2">
+      <div className="pastel-col-header shrink-0 border-b px-4 py-3 space-y-2 transition-colors duration-200">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <FolderKanban className="h-4 w-4 text-slate-800" />
-            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800">
+            <FolderKanban className="h-4 w-4 text-slate-700" />
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-700">
               Proyectos y Expedientes ({projects.length})
             </h2>
           </div>
@@ -98,9 +98,9 @@ export function ProjectsColumn({
 
         {/* Banner de Filtro Activo por Subvención */}
         {selectedGrant ? (
-          <div className="flex items-center justify-between gap-2 rounded-lg border border-blue-200 bg-blue-50/80 px-3 py-1.5 text-xs text-blue-950">
+          <div className="pastel-accent-pill flex items-center justify-between gap-2 rounded-lg border px-3 py-1.5 text-xs">
             <div className="flex items-center gap-1.5 min-w-0">
-              <Filter className="h-3.5 w-3.5 text-blue-700 shrink-0" />
+              <Filter className="h-3.5 w-3.5 shrink-0" />
               <span className="truncate">
                 Filtrando por subvención:{" "}
                 <strong className="font-semibold">{selectedGrant.title}</strong>
@@ -109,13 +109,13 @@ export function ProjectsColumn({
             <button
               type="button"
               onClick={onClearGrantFilter}
-              className="shrink-0 font-semibold text-blue-700 hover:underline text-[11px]"
+              className="shrink-0 font-semibold hover:underline text-[11px]"
             >
               Quitar filtro
             </button>
           </div>
         ) : (
-          <div className="flex items-center justify-between rounded-md bg-slate-50 px-2.5 py-1.5 text-[11px] border border-slate-200/70">
+          <div className="pastel-subtle-box flex items-center justify-between rounded-lg px-2.5 py-1.5 text-[11px] border">
             <span className="text-slate-500">
               Presupuesto Total Proyectos:{" "}
               <strong className="font-mono text-slate-800">
@@ -135,7 +135,7 @@ export function ProjectsColumn({
       {/* Listado de Tarjetas de Proyectos con Scroll Interno */}
       <div className="flex-1 overflow-y-auto p-3.5 space-y-3">
         {projects.length === 0 ? (
-          <div className="flex h-56 flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-white p-6 text-center">
+          <div className="flex h-56 flex-col items-center justify-center rounded-xl border border-dashed border-slate-300/80 bg-white/80 p-6 text-center">
             <FolderKanban className="h-7 w-7 text-slate-300 mb-2" />
             <p className="text-xs font-semibold text-slate-700">
               {selectedGrant
@@ -172,8 +172,8 @@ export function ProjectsColumn({
                 }
                 className={`rounded-xl border p-4 transition-all cursor-pointer ${
                   isSelected
-                    ? "border-slate-900 bg-white shadow-md ring-1 ring-slate-900"
-                    : "border-slate-200 bg-white hover:border-slate-300 hover:shadow-xs"
+                    ? "pastel-card-selected"
+                    : "pastel-card hover:shadow-xs"
                 }`}
               >
                 {/* Fila 1: Estado, Validación Presupuestaria y Acciones CRUD */}
@@ -182,7 +182,7 @@ export function ProjectsColumn({
                     <Badge variant={statusInfo.variant}>{statusInfo.label}</Badge>
                     {project.isBudgetBalanced ? (
                       <span
-                        className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-800 border border-emerald-200"
+                        className="inline-flex items-center gap-1 rounded-md bg-emerald-50/90 px-2 py-0.5 text-[11px] font-medium text-emerald-800 border border-emerald-200/80"
                         title="La suma de subvenciones + fondos propios cuadra con el presupuesto total"
                       >
                         <CheckCircle2 className="h-3 w-3 text-emerald-600" />
@@ -222,7 +222,7 @@ export function ProjectsColumn({
                     <button
                       type="button"
                       onClick={() => onDeleteProject(project)}
-                      className="rounded p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600"
+                      className="rounded p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
                       title="Eliminar proyecto"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
@@ -233,7 +233,7 @@ export function ProjectsColumn({
                 {/* Fila 2: Nombre del Proyecto y Presupuesto Total */}
                 <div className="mt-2.5 flex items-start justify-between gap-4">
                   <div className="min-w-0">
-                    <h3 className="text-sm font-bold text-slate-900 leading-snug">
+                    <h3 className="text-sm font-bold text-slate-800 leading-snug">
                       {project.name}
                     </h3>
                     {project.description && (
@@ -243,8 +243,8 @@ export function ProjectsColumn({
                     )}
                   </div>
 
-                  <div className="text-right shrink-0 rounded-lg bg-slate-900 px-3 py-1.5 text-white">
-                    <span className="block text-[10px] uppercase tracking-wider text-slate-300">
+                  <div className="pastel-accent-pill text-right shrink-0 rounded-xl border px-3 py-1.5">
+                    <span className="block text-[10px] uppercase tracking-wider opacity-75">
                       Presupuesto Total
                     </span>
                     <span className="font-mono text-sm font-bold">
@@ -255,25 +255,25 @@ export function ProjectsColumn({
 
                 {/* Fila 3: Trazabilidad Administrativa (Badges de Expedientes Obligatorios) */}
                 <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-2.5">
-                  <div className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs">
+                  <div className="pastel-subtle-box inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs">
                     <FileText className="h-3.5 w-3.5 text-slate-600 shrink-0" />
                     <span className="text-[11px] text-slate-500">Exp. Administrativo:</span>
-                    <strong className="font-mono text-xs text-slate-900">
+                    <strong className="font-mono text-xs text-slate-800">
                       {project.adminFileNumber}
                     </strong>
                   </div>
 
-                  <div className="inline-flex items-center gap-1.5 rounded-md border border-blue-200 bg-blue-50/60 px-2.5 py-1 text-xs">
-                    <FileSpreadsheet className="h-3.5 w-3.5 text-blue-700 shrink-0" />
-                    <span className="text-[11px] text-blue-700">Exp. Mod. Presupuestaria:</span>
-                    <strong className="font-mono text-xs text-blue-950">
+                  <div className="inline-flex items-center gap-1.5 rounded-md border border-sky-200/80 bg-sky-50/70 px-2.5 py-1 text-xs">
+                    <FileSpreadsheet className="h-3.5 w-3.5 text-sky-700 shrink-0" />
+                    <span className="text-[11px] text-sky-700">Exp. Mod. Presupuestaria:</span>
+                    <strong className="font-mono text-xs text-sky-950">
                       {project.budgetModFileNumber}
                     </strong>
                   </div>
                 </div>
 
                 {/* Fila 4: Desglose de Financiación (Subvenciones Vinculadas + Fondos Propios) */}
-                <div className="mt-3 rounded-lg border border-slate-200/80 bg-slate-50/70 p-2.5 space-y-1.5">
+                <div className="pastel-subtle-box mt-3 rounded-lg border p-2.5 space-y-1.5">
                   <div className="flex items-center justify-between text-[11px] text-slate-500">
                     <span className="font-semibold uppercase tracking-wider text-[10px] text-slate-600 flex items-center gap-1">
                       <Coins className="h-3 w-3" />
@@ -297,8 +297,8 @@ export function ProjectsColumn({
                           }}
                           className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs transition-colors ${
                             isHighlighted
-                              ? "border-slate-900 bg-slate-900 text-white"
-                              : "border-emerald-200 bg-emerald-50/90 text-emerald-950 hover:bg-emerald-100/80"
+                              ? "pastel-accent-bg border-transparent text-white"
+                              : "border-teal-200/90 bg-teal-50/80 text-teal-950 hover:bg-teal-100/70"
                           }`}
                           title={`Subvención otorgada por: ${alloc.grantingBody}`}
                         >
@@ -309,8 +309,8 @@ export function ProjectsColumn({
                           <span
                             className={`rounded px-1.5 py-0.2 font-mono text-[11px] font-bold ${
                               isHighlighted
-                                ? "bg-white/20 text-white"
-                                : "bg-white text-emerald-900"
+                                ? "bg-white/25 text-white"
+                                : "bg-white text-teal-900"
                             }`}
                           >
                             {formatCurrency(alloc.allocatedAmount)}
@@ -321,7 +321,7 @@ export function ProjectsColumn({
 
                     {/* Etiqueta de Fondos Propios (si > 0 €) */}
                     {project.ownFundsAmount > 0 && (
-                      <span className="inline-flex items-center gap-1.5 rounded-md border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-950">
+                      <span className="inline-flex items-center gap-1.5 rounded-md border border-amber-200/90 bg-amber-50/80 px-2.5 py-1 text-xs font-medium text-amber-950">
                         <Wallet className="h-3 w-3 text-amber-700 shrink-0" />
                         <span>Fondos Propios</span>
                         <strong className="rounded bg-white px-1.5 font-mono text-[11px] text-amber-900">

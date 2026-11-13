@@ -27,10 +27,13 @@ import { GrantModal } from "@/components/modals/GrantModal";
 import { DeleteGrantDialog } from "@/components/modals/DeleteGrantDialog";
 import { ProjectModal } from "@/components/modals/ProjectModal";
 import { CommandSearchModal } from "@/components/modals/CommandSearchModal";
+import { PASTEL_THEMES, PastelThemeId } from "@/lib/themes";
 
 interface DashboardClientProps {
   initialData: DashboardInitialData;
 }
+
+const THEME_STORAGE_KEY = "sigesub-pastel-theme";
 
 function recomputeDerivedState(
   grantsList: GrantDTO[],
@@ -116,6 +119,29 @@ export function DashboardClient({ initialData }: DashboardClientProps) {
   const [projects, setProjects] = React.useState<ProjectDTO[]>(initialData.projects);
   const [notes, setNotes] = React.useState<NoteDTO[]>(initialData.notes);
   const [isFallbackMode] = React.useState(Boolean(initialData.isFallbackMode));
+
+  // Estado del tema pastel activo (con persistencia en localStorage)
+  const [activeTheme, setActiveTheme] = React.useState<PastelThemeId>("nordic-breeze");
+
+  React.useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem(THEME_STORAGE_KEY) as PastelThemeId | null;
+      if (saved && PASTEL_THEMES.some((t) => t.id === saved)) {
+        setActiveTheme(saved);
+      }
+    } catch {
+      // Ignorar si localStorage está restringido
+    }
+  }, []);
+
+  const handleThemeChange = (newTheme: PastelThemeId) => {
+    setActiveTheme(newTheme);
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, newTheme);
+    } catch {
+      // Ignorar
+    }
+  };
 
   // Sincronizar cuando Next.js revalida los Server Components
   React.useEffect(() => {
@@ -229,7 +255,6 @@ export function DashboardClient({ initialData }: DashboardClientProps) {
 
   // Drag & Drop con actualización optimista inmediata + persistencia en PostgreSQL
   const handleReorderGrants = async (reorderedFiltered: GrantDTO[]) => {
-    // Reconstruir lista completa manteniendo las posiciones actualizadas
     const filteredIds = new Set(reorderedFiltered.map((g) => g.id));
     const reorderedMap = new Map(reorderedFiltered.map((g, idx) => [g.id, idx]));
 
@@ -261,7 +286,6 @@ export function DashboardClient({ initialData }: DashboardClientProps) {
       if (!res.success) return res;
     }
 
-    // Actualización optimista inmediata en cliente
     const nowIso = new Date().toISOString();
     let nextGrantsList: GrantDTO[];
 
@@ -440,7 +464,6 @@ export function DashboardClient({ initialData }: DashboardClientProps) {
         }
       }
 
-      // Actualización en memoria local
       setNotes((prev) => {
         const exists = prev.some(
           (n) =>
@@ -501,7 +524,10 @@ export function DashboardClient({ initialData }: DashboardClientProps) {
   );
 
   return (
-    <div className="flex h-screen w-screen flex-col overflow-hidden bg-slate-50 text-slate-900">
+    <div
+      data-theme={activeTheme}
+      className="flex h-screen w-screen flex-col overflow-hidden bg-slate-50 text-slate-900 transition-colors duration-200"
+    >
       {/* Aviso sutil si aún no se ha conectado DATABASE_URL */}
       {isFallbackMode && (
         <div className="flex shrink-0 items-center justify-between bg-amber-50 border-b border-amber-200 px-4 py-1 text-[11px] text-amber-900">
@@ -509,15 +535,13 @@ export function DashboardClient({ initialData }: DashboardClientProps) {
             <Database className="h-3.5 w-3.5 text-amber-700" />
             <span>
               <strong>Modo Demostración Interactiva:</strong> Base de datos PostgreSQL no detectada
-              en <code className="rounded bg-amber-100 px-1 font-mono">DATABASE_URL</code>. Los
-              cambios funcionan en memoria hasta configurar PostgreSQL y ejecutar{" "}
-              <code className="rounded bg-amber-100 px-1 font-mono">npm run db:migrate</code>.
+              en <code className="rounded bg-amber-100 px-1 font-mono">DATABASE_URL</code>.
             </span>
           </div>
         </div>
       )}
 
-      {/* Barra Superior Institucional */}
+      {/* Barra Superior Institucional con Selector de Temas Pastel */}
       <HeaderGlobal
         grantSearch={grantSearch}
         onGrantSearchChange={setGrantSearch}
@@ -536,6 +560,8 @@ export function DashboardClient({ initialData }: DashboardClientProps) {
         onOpenCommandModal={() => setCommandModalOpen(true)}
         totalGrantsAmount={totalGrantsAmount}
         totalAllocatedAmount={totalAllocatedAmount}
+        activeTheme={activeTheme}
+        onThemeChange={handleThemeChange}
       />
 
       {/* Layout Principal de 3 Columnas Independientes con Scroll Interno */}
