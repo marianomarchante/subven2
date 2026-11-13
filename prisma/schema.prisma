@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum GrantStatus {
+  CONCEDIDA
+  EN_EJECUCION
+  JUSTIFICADA
+  CERRADA
+}
+
+enum ProjectStatus {
+  PLANIFICADO
+  EN_CURSO
+  FINALIZADO
+}
+
+model Grant {
+  id                    String         @id @default(uuid()) @db.Uuid
+  title                 String
+  grantingBody          String
+  totalAmount           Decimal        @db.Decimal(14, 2)
+  resolutionDate        DateTime
+  justificationDeadline DateTime
+  status                GrantStatus    @default(CONCEDIDA)
+  displayOrder          Int            @default(0)
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+
+  projectGrants         ProjectGrant[]
+  notes                 Note[]
+
+  @@index([displayOrder])
+  @@index([status])
+  @@map("grants")
+}
+
+model Project {
+  id                  String         @id @default(uuid()) @db.Uuid
+  name                String
+  description         String?        @db.Text
+  totalBudget         Decimal        @db.Decimal(14, 2)
+  ownFundsAmount      Decimal        @default(0) @db.Decimal(14, 2)
+  adminFileNumber     String
+  budgetModFileNumber String
+  status              ProjectStatus  @default(PLANIFICADO)
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  projectGrants       ProjectGrant[]
+  notes               Note[]
+
+  @@index([adminFileNumber])
+  @@index([budgetModFileNumber])
+  @@index([status])
+  @@map("projects")
+}
+
+model ProjectGrant {
+  id              String   @id @default(uuid()) @db.Uuid
+  projectId       String   @db.Uuid
+  grantId         String   @db.Uuid
+  allocatedAmount Decimal  @db.Decimal(14, 2)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  grant           Grant    @relation(fields: [grantId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, grantId])
+  @@index([grantId])
+  @@index([projectId])
+  @@map("project_grants")
+}
+
+model Note {
+  id        String   @id @default(uuid()) @db.Uuid
+  content   String   @db.Text
+  grantId   String?  @db.Uuid
+  projectId String?  @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  grant     Grant?   @relation(fields: [grantId], references: [id], onDelete: Cascade)
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([grantId])
+  @@index([projectId])
+  @@map("notes")
+}
